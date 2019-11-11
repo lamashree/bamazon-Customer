@@ -57,5 +57,24 @@ function start() {
 }
 
 function itemId(){
+inquirer
+.prompt([
+  {
+    name: "item_id",
+    type:"input",
+    message: "what is the id number for your item?"
+  },
+  {
+    name: "category", 
+    type: "input",
+    message: "How manny quantuty you like to buy?",
+    validate:function(value){
+     if(isNaN(value) == false){
+       return true;
+     }
+     return false;
+    }
+  },
 
+])
 }
