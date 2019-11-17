@@ -86,9 +86,9 @@ function itemBuy() {
       },
 
     ]).then(function (answer) {
-      // var query = "SELECT item_id, stock_quantity ? FROM products where = ?";
-
+// query for database
       var query = "SELECT item_id, product_name, stock_quantity, price_costTocustomer FROM products"
+      
       connection.query(query, { item_id: answer.item_id, quantity: answer.quantity }, function (err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
@@ -119,9 +119,27 @@ function checkOut(answer) {
         name: "checkOutOrcancell",
         type: "list",
         message: " would you like to place your order? if  yes, please click on checkout or cancell",
-        choices: ["place order", " cancell order"]
+        choices: ["place order", "continue shopping", "cancell order"]
       })
-//     .then(function(answer){
-//       if 
-//     }) 
+    .then(function (answer) {
+      if (answer.checkOutOrcancell === "place order") {
+        console.log("Your order have been successfull placed. ");
+        connection.query(
+         "UPDATE products SET? WHERE ?",
+         {
+          stock_quantity:  stock_quantity - answer.quantity
+         }
+        )
+      }
+      if (answer.checkOutOrcancell === "continue shopping") {
+        console.log("this is working");
+        afterConnection()
+        start();
+
+
+      }
+      else {
+        connection.end();
+      }
+    })
 }
