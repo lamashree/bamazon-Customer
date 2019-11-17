@@ -20,7 +20,7 @@ connection.connect(function (err) {
   console.log("connected as id " + connection.threadId);
   console.log("\n.................................................Welcome to Bamazon..................................................\n")
   console.log("\n................................................what you like to purchase Today?.....................................\n")
-  
+
   afterConnection();
 
 
@@ -39,65 +39,89 @@ function afterConnection() {
 }
 //this is start function that will prompt user for two messages 
 function start(inventory) {
-//   console.log("\n..............................Welcome Bamazon............................\n")
-// console.log("\n.............................what you like to purchase Today?................\n")
+  //   console.log("\n..............................Welcome Bamazon............................\n")
+  // console.log("\n.............................what you like to purchase Today?................\n")
   inquirer
     .prompt({
       name: "BuyOrNotbuy",
       type: "list",
       message: "this is the list of the item you can buy with Bamazon.",
-      choices: ["Buy",  "cancell"]
+      choices: ["shop", "cancell"]
     })
     //whenever user select different answer that will trigger differnt function base on thier choices and will end the connection with database.
-     .then(function(answer) {
-      if (answer.BuyOrNotbuy === "Buy") {
+    .then(function (answer) {
+      if (answer.BuyOrNotbuy === "shop") {
         itemBuy();
       }
-    //  else if (answer.BuyOrNotbuy === "stock_quantity"){
-    //     stockQauntity();
-    //     console.log("this is working");
-    //   }
-      else{
+      //  else if (answer.BuyOrNotbuy === "stock_quantity"){
+      //     stockQauntity();
+      //     console.log("this is working");
+      //   }
+      else {
         connection.end();
       }
     })
 
 }
 
-function itemBuy(){
-inquirer
-.prompt([
-  {
-    name: "item_id",
-    type:"input",
-    message: "what is the id number for your item?"
-  },
-  {
-    name: "quantity", 
-    type: "input",
-    message: "How manny quantuty you like to buy?",
-    validate:function(value){
-     if(isNaN(value) == false){
-       return true;
-     }
-     return false;
-    }
+function itemBuy() {
+  inquirer
+    .prompt([
+      {
+        name: "item_id",
+        type: "input",
+        message: "what is the id number for your item?"
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "How manny quantity you like to buy?",
+        validate: function (value) {
+          if (isNaN(value) == false) {
+            return true;
+          }
+          return false;
+        }
 
-  },
+      },
 
-])
+    ]).then(function (answer) {
+      // var query = "SELECT item_id, stock_quantity ? FROM products where = ?";
+
+      var query = "SELECT item_id, product_name, stock_quantity, price_costTocustomer FROM products"
+      connection.query(query, { item_id: answer.item_id, quantity: answer.quantity }, function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+          var id = res[i].item_id
+          var itemQuantity = res[i].stock_quantity
+          var productName = res[i].product_name
+          var price = res[i].price_costTocustomer
+        }
+        if (answer.quantity > itemQuantity) {
+          console.log("\n Sorry!!! There is no sufficent inventory for your requested item is \n" + itemQuantity + " in stock. Try again with less quantity. ")
+        }
+        else (answer.item_id === id && answer.quantity <= itemQuantity)
+        console.log("\nName of the product is \n" + productName + "\nprice for the each product\n is " + "$" + price + "\nTotal price for your order is \n" + answer.quantity * price)
+
+        checkOut();
+
+      });
+
+    });
 
 
-.then(function(answer) {
-  // var query = "SELECT item_id, stock_quantity ? FROM products where = ?";
-
-  var query = "SELECT item_id, product_name, stock_quantity FROM products WHERE ?"
-
-  connection.query(query, {item_id: answer.item_id}, function(err, res) {
-    if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-      console.log("\n Product id: " + res[i].item_id + "\n Stock_Quantity: " + res[i].stock_quantity);
-    }
-  });
-})
 };
+
+function checkOut(answer) {
+  inquirer
+    .prompt(
+      {
+        name: "checkOutOrcancell",
+        type: "list",
+        message: " would you like to place your order? if  yes, please click on checkout or cancell",
+        choices: ["place order", " cancell order"]
+      })
+//     .then(function(answer){
+//       if 
+//     }) 
+}
