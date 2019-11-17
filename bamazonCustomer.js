@@ -99,6 +99,7 @@ function itemBuy() {
         }
         if (answer.quantity > itemQuantity) {
           console.log("\n Sorry!!! There is no sufficent inventory for your requested item is \n" + itemQuantity + " in stock. Try again with less quantity. ")
+          connection.end();
         }
         else (answer.item_id === id && answer.quantity <= itemQuantity)
         console.log("\nName of the product is \n" + productName + "\nprice for the each product\n is " + "$" + price + "\nTotal price for your order is \n" + answer.quantity * price)
@@ -124,7 +125,7 @@ function checkOut(answer) {
     .then(function (answer) {
       if (answer.checkOutOrcancell === "place order") {
         console.log("Your order have been successfull placed. ");
-        connection.query(
+        connection.query(answer)(
          "UPDATE products SET? WHERE ?",
          {
           stock_quantity:  stock_quantity - answer.quantity
