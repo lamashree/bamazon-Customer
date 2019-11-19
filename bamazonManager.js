@@ -50,25 +50,6 @@ function welcome() {
             if (answer.menuOption === "Add new product") {
                 addNewProduct();
             }
-
-
-
-            // switch ("answer") {
-            //     case "Product for sale":
-            //         viewProduct();
-            //         break;
-            //     case "Low Inventory":
-            //         viewInventory();
-            //         break;
-            //     case "Add to Inventory":
-            //         addInventory();
-            //         break;
-            //     case "Add new product":
-            //         addNewProduct();
-            //         break;
-            //     default:
-            //         welcome();
-            // }
         })
 }
 function viewProduct(answer) {
@@ -93,6 +74,8 @@ function viewInventory(answer) {
     })
 }
 function addInventory() {
+    var itemQty = 0;
+
     console.log("adding to the inventory")
     //query the database to show all the products in the inventtory so they can add more inventory with id number//
     connection.query("SELECT * FROM products", function (err, results) {
@@ -129,10 +112,9 @@ function addInventory() {
 
                 }
             ]).then(function (answer) {
-                var itemQuantity = 0;
                 for (var i = 0; i < results.length; i++) {
                     if (parseInt(answer.id) === results[i].item_id) {
-                        itemQuantity = results[i].stock_quantity
+                        itemQty= results[i].stock_quantity
                         increseQty(answer)
                     }
 
@@ -149,7 +131,7 @@ function increseQty(answer) {
         "UPDATE products SET ? WHERE ?",
         [
             {
-                stock_quantity: itemQuantity + answer.quantity
+                stock_quantity: itemQty + answer.quantity
             },
             {
                 item_id: answer.id
@@ -166,8 +148,6 @@ function increseQty(answer) {
 
 function addNewProduct(answer) {
     console.log("--------------adding new product to the database-------------------");
-    var query = "INSERT INTO products SET? "
-    connection.query(query, function(err, results))
     inquirer
         .prompt([
             {
@@ -183,19 +163,46 @@ function addNewProduct(answer) {
             {
                 name: "department",
                 type: "input",
-                message: " what is the department foe your product?",
+                message: " what is the department for your product?",
             },
             {
-                name: " price",
+                name: "price",
                 type: "input",
-                message: "price for each product?"
+                message: "cost for each product?"
             },
-             {
-                 name: "quantity",
-                 type: "input",
-                 message: " how much quantity you like to add?"
-             }
+            {
+                name: "quantity",
+                type: "input",
+                message: " how much quantity you like to add?"
+            }
 
-        ])
+        ]).then(function (answer) {
+            addItemToDB(answer)
+        })
+}
 
+function addItemToDB(answer) {
+    console.log("this is working");
+    var query = "INSERT INTO products SET? "
+    connection.query(query, 
+     {
+      item_id: answer.id,
+      product_name: answer.Name,
+      department_name:answer.department,
+      price_costTocustomer: answer.price,
+      stock_quantity: answer.quantity
+     
+        }, function(err, results){
+            if (err) throw err;
+            console.log("\n New product successfully add to the database.\n")
+            viewProduct();
+            welcome();
+        }
+        
+        )
+    
+}
+function exit() {
+	console.log("\nNever stop selling.\n");
+	connection.end();
 }
