@@ -61,5 +61,6 @@ The second message should ask how many units of the product they would like to b
 - Once the update goes through, show the customer the total cost of their purchase.
 
 ## Screenshort
+This is welcome page for the app. whenever customers proceed to the app customer will see welcome page and the products list that are for sales. and at bottom of this page will show two choices for customer one for shop and cancell.
 <img src="images/Image 11-18-19 at 11.59 PM.jpg"
 alt="database table in console"/>
