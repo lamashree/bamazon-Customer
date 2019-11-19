@@ -65,5 +65,6 @@ This is welcome page for the app. whenever customers proceed to the app customer
 <img src="images/Image 11-18-19 at 11.59 PM.jpg"
 alt="database table in console"/>
 
+when Customer wnats to shop product from this app customer will ask for item id and how manny quantity like to buy and will give the total price for order. this will give option for to place their order, continue shpping  and cancell order.
 <img src="images/Image 11-19-19 at 12.11 AM.jpg"
 alt="total for shopping"/>
