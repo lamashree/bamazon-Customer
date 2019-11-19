@@ -59,3 +59,7 @@ The second message should ask how many units of the product they would like to b
 
 - This means updating the SQL database to reflect the remaining quantity.
 - Once the update goes through, show the customer the total cost of their purchase.
+
+## Screenshort
+<img src="images/Image 11-18-19 at 11.59 PM.jpg"
+alt="database table in console"/>
