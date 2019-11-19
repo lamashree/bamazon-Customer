@@ -64,3 +64,6 @@ The second message should ask how many units of the product they would like to b
 This is welcome page for the app. whenever customers proceed to the app customer will see welcome page and the products list that are for sales. and at bottom of this page will show two choices for customer one for shop and cancell.
 <img src="images/Image 11-18-19 at 11.59 PM.jpg"
 alt="database table in console"/>
+
+<img src="images/Image 11-19-19 at 12.11 AM.jpg"
+alt="total for shopping"/>
