@@ -92,76 +92,110 @@ function viewInventory(answer) {
 
     })
 }
-function addInventory(answer) {
+function addInventory() {
     console.log("adding to the inventory")
     //query the database to show all the products in the inventtory so they can add more inventory with id number//
     connection.query("SELECT * FROM products", function (err, results) {
         if (err) throw err;
         console.table(results)
+
+        // asking manager which id number product you like to add to the inventory//
+        console.log("\n=======================================================================================\n")
+        inquirer
+            .prompt([
+                {
+                    name: "id",
+                    // type: "input",
+                    message: "input item id to add your inventory",
+                    // checking the item id is number greater than zero and contained in the DB//
+                    validate: function (value) {
+                        if (isNaN(value) == false) {
+                            return true;
+                        }
+                        return false;
+                    }
+
+                },
+                {
+                    name: "quantity",
+                    // type: "input",
+                    message: " what is the amount of quantity adding to the inventory?",
+                    validate: function (value) {
+                        if (isNaN(value) == false) {
+                            return true;
+                        }
+                        return false;
+                    }
+
+                }
+            ]).then(function (answer) {
+                var itemQuantity = 0;
+                for (var i = 0; i < results.length; i++) {
+                    if (parseInt(answer.id) === results[i].item_id) {
+                        itemQuantity = results[i].stock_quantity
+                        increseQty(answer)
+                    }
+
+                }
+            })
     })
-    // asking manager which id number product you like to add to the inventory//
-    console.log("\n=======================================================================================\n")
+
+
+}
+
+function increseQty(answer) {
+    console.log("your inventory is done");
+    connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+            {
+                stock_quantity: itemQuantity + answer.quantity
+            },
+            {
+                item_id: answer.id
+            }
+        ],
+        function (error, results) {
+            // throw error, else log inventory updated and return to welcome screen
+            if (error) throw error;
+            console.log("\nInventory successfully increased.\n");
+            welcome();
+        });
+}
+
+
+function addNewProduct(answer) {
+    console.log("--------------adding new product to the database-------------------");
+    var query = "INSERT INTO products SET? "
+    connection.query(query, function(err, results))
     inquirer
         .prompt([
             {
                 name: "id",
                 type: "input",
-                message: "input item id to add your inventory",
-                // checking the item id is number greater than zero and contained in the DB//
-                validate: function (value) {
-                    if (isNaN(value) == false) {
-                        return true;
-                    }
-                    return false;
-                }
-
+                message: " input your item id",
             },
             {
-                name: "quantity",
+                name: "Name",
                 type: "input",
-                message: " what is the amount of quantity adding to the inventory?",
-                validate: function (value) {
-                    if (isNaN(value) == false) {
-                        return true;
-                    }
-                    return false;
-                }
+                message: " Enter your Name of the product you like to add in your DB",
+            },
+            {
+                name: "department",
+                type: "input",
+                message: " what is the department foe your product?",
+            },
+            {
+                name: " price",
+                type: "input",
+                message: "price for each product?"
+            },
+             {
+                 name: "quantity",
+                 type: "input",
+                 message: " how much quantity you like to add?"
+             }
 
-            }
-        ]).then(function (answer) {
-            var itemQuantity = 0;
-            for (var i = 0; i < results.length; i++) {
-                if (answer.id === results[i].item_id) {
-                    stock_quantity = results[i].stock_quantity + answer.quantity
-                }
-            }
-        })
+        ])
 
-        // increseQty()
-        
-
-}
-
-function increseQty(){
-    connection.query(
-		"UPDATE products SET ? WHERE ?", 
-		[
-			{
-				stock_quantity: stockQty + parseInt(addQty)
-			}, 
-			{
-				item_id: parseInt(item)
-			}
-		], 
-		function(error, results) {
-			// throw error, else log inventory updated and return to welcome screen
-			if (error) throw error;
-			console.log("\nInventory successfully increased.\n");
-			welcome();
-	});
-}
-
-}
-function addNewProduct(answer) {
-    console.log("adding new product to the database");
 }
