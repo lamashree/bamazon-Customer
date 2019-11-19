@@ -126,9 +126,9 @@ function checkOut(answer) {
       if (answer.checkOutOrcancell === "place order") {
         console.log("Your order have been successfull placed. ");
         connection.query(answer)(
-         "UPDATE products SET? WHERE ?",
+         "UPDATE products SET ",
          {
-          stock_quantity:  stock_quantity - answer.quantity
+          stock_quantity:  itemQuantity - answer.quantity
          }
         )
       }
