@@ -104,7 +104,7 @@ alt="total for shopping"/>
  ## Screenshort (results)
 
 
-<img src="images/Screen Shot 2019-11-19 at 12.50.25 AM"
+<img src="images/image 2019-11-19 at 12.50.25 AM.jpg"
 alt="total for shopping"/>
 
 
