@@ -102,9 +102,11 @@ alt="total for shopping"/>
 
 
  ## Screenshort (results)
+
  This is home page for manager
+ 
  <img src="images/Screen Shot 2019-11-19 at 12.50.25 AM"
-alt="manager homepage"/>
+alt="manager welcome"/>
 
 
 <img src="images/Image 11-19-19 at 12.54 AM.jpg"
