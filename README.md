@@ -102,15 +102,15 @@ alt="total for shopping"/>
 
 
  ## Screenshort (results)
-
-
+Manager homepage with all list of action they can do with it.
 <img src="images/image 2019-11-19 at 12.50.25 AM.jpg"
-alt="total for shopping"/>
-
-
+alt="Manager home page"/>
+Manger can view product that are for sale right now by clicking product for sale.
 <img src="images/Image 11-19-19 at 12.54 AM.jpg"
 alt="total for shopping"/>
+Manager can view low inventory level product by Low inventory.
 <img src="images/Image 11-19-19 at 12.55 AM.jpg"
 alt="total for shopping"/>
+Manager adding completely new item to the products list.
 <img src="images/Image 11-19-19 at 1.00 AM.jpg"
 alt="total for shopping"/>
