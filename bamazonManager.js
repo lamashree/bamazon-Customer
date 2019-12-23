@@ -73,6 +73,7 @@ function viewInventory(answer) {
 
     })
 }
+// this is where i am having problem!//
 function addInventory() {
     var itemQty = 0;
 

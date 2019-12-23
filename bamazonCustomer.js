@@ -38,7 +38,7 @@ function afterConnection() {
   });
 }
 //this is start function that will prompt user for two messages 
-function start(inventory) {
+function start() {
   //   console.log("\n..............................Welcome Bamazon............................\n")
   // console.log("\n.............................what you like to purchase Today?................\n")
   inquirer
@@ -53,10 +53,10 @@ function start(inventory) {
       if (answer.BuyOrNotbuy === "shop") {
         itemBuy();
       }
-      //  else if (answer.BuyOrNotbuy === "stock_quantity"){
-      //     stockQauntity();
-      //     console.log("this is working");
-      //   }
+      else if (answer.BuyOrNotbuy === "stock_quantity") {
+        stockQauntity();
+        console.log("this is working");
+      }
       else {
         connection.end();
       }
@@ -86,61 +86,87 @@ function itemBuy() {
       },
 
     ]).then(function (answer) {
-// query for database
+      // query for database
+      var id;
+      var itemQuantity;
+      var productName;
+      var price;
       var query = "SELECT item_id, product_name, stock_quantity, price_costTocustomer FROM products"
-      
+
+      // 
       connection.query(query, { item_id: answer.item_id, quantity: answer.quantity }, function (err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
-          var id = res[i].item_id
-          var itemQuantity = res[i].stock_quantity
-          var productName = res[i].product_name
-          var price = res[i].price_costTocustomer
-        }
-        if (answer.quantity > itemQuantity) {
-          console.log("\n Sorry!!! There is no sufficent inventory for your requested item is \n" + itemQuantity + " in stock. Try again with less quantity. ")
-          connection.end();
-        }
-        else (answer.item_id === id && answer.quantity <= itemQuantity)
-        console.log("\nName of the product is \n" + productName + "\nprice for the each product\n is " + "$" + price + "\nTotal price for your order is \n" + answer.quantity * price)
+          id = res[i].item_id
+          itemQuantity = res[i].stock_quantity
+          productName = res[i].product_name
+          price = res[i].price_costTocustomer
 
-        checkOut();
 
+
+          if (answer.quantity > itemQuantity) {
+            console.log("\n Sorry!!! There is no sufficent inventory for your requested item is \n" + itemQuantity + " in stock. Try again with less quantity. ")
+            connection.end();
+          }
+          else (answer.item_id === id && answer.quantity <= itemQuantity)
+          console.log("\nName of the product is \n" + productName + "\nprice for the each product\n is " + "$" + price + "\nTotal price for your order is \n" + answer.quantity * price)
+          // console.log("if statement is not working!")
+          // console.log(answer.item_id + " answer.item_id");
+          // console.log(answer.quantity + "answer.quantity");
+
+
+
+          checkOut();
+
+
+        }
       });
+
 
     });
 
+  function checkOut(answer) {
+    inquirer
+      .prompt(
+        {
+          name: "checkOutOrcancell",
+          type: "list",
+          message: " would you like to place your order? if  yes, please click on checkout or cancell",
+          choices: ["place order", "continue shopping", "cancell order"]
+        })
+      .then(function (answer) {
+        if (answer.checkOutOrcancell === "place order") {
+          console.log("Your order have been successfull placed. ");
+          connection.query(answer)(
+            "UPDATE products SET ?",
+            {
+              stock_quantity: itemQuantity - answer.quantity
+            }
+          )
+        }
+        if (answer.checkOutOrcancell === "continue shopping") {
+          console.log("this is working");
+          afterConnection()
+          start();
 
-};
 
-function checkOut(answer) {
-  inquirer
-    .prompt(
-      {
-        name: "checkOutOrcancell",
-        type: "list",
-        message: " would you like to place your order? if  yes, please click on checkout or cancell",
-        choices: ["place order", "continue shopping", "cancell order"]
+        }
+        else {
+          connection.end();
+        }
       })
-    .then(function (answer) {
-      if (answer.checkOutOrcancell === "place order") {
-        console.log("Your order have been successfull placed. ");
-        connection.query(answer)(
-         "UPDATE products SET ",
-         {
-          stock_quantity:  itemQuantity - answer.quantity
-         }
-        )
-      }
-      if (answer.checkOutOrcancell === "continue shopping") {
-        console.log("this is working");
-        afterConnection()
-        start();
+  }
+}
 
+function checkDB() {
+  connection.query(query, { item_id: answer.item_id, quantity: answer.quantity }, function (err, res) {
+    if (err) throw err;
+    for (var i = 0; i < res.length; i++) {
+      id = res[i].item_id
+      itemQuantity = res[i].stock_quantity
+      productName = res[i].product_name
+      price = res[i].price_costTocustomer
 
-      }
-      else {
-        connection.end();
-      }
-    })
+    }
+  })
 }
